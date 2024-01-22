@@ -6,14 +6,15 @@
 import gzip
 import shutil
 import os
+import re
 from scapy.all import *
-import os
 import subprocess
 import random
 import requests
 from tqdm import tqdm
 
-resource_url = "https://cdn.2024.irisc.tf/investigator-alligator.gz"
+RESOURCE_PRIMARY_URL = "https://cdn.2024.irisc.tf/investigator-alligator.gz"
+RESOURCE_BACKUP_URL = "https://shawndxyz.sjc1.vultrobjects.com/ctf/2024.irisctf/investigator-alligator.gz"
 
 input_file = "./recurso/investigator-alligator.gz"
 output_dir = "./solve"
@@ -46,18 +47,20 @@ def remove_non_unicode_chars(input_str):
 os.makedirs(output_dir, exist_ok=True)
 
 # Check if the resource already exists
+resource_available = True  # Track resource availability
 if not os.path.exists(input_file):
+    resource_available = False
     # If the file doesn't exist, download it
     try:
         # Create the 'recurso' directory if it doesn't exist
         os.makedirs(os.path.dirname(input_file), exist_ok=True)
         
-        # Download the file
-        print(f"[+] Downloading file {input_file} from {resource_url}")
-        # Download the file with tqdm for progress bar
-        response = requests.get(resource_url, stream=True)
+        # Download the file from the primary URL
+        print(f"[+] Downloading file {input_file} from {RESOURCE_PRIMARY_URL}")
+        response = requests.get(RESOURCE_PRIMARY_URL, stream=True)
         total_size = int(response.headers.get('content-length', 0))
 
+        # Download the file with tqdm for progress bar
         with open(input_file, "wb") as file, tqdm(
             desc="Downloading",
             total=total_size,
@@ -69,15 +72,50 @@ if not os.path.exists(input_file):
                 bar.update(len(data))
                 file.write(data)
         
+        resource_available = True
         print(f"[+] File downloaded to {input_file}")
+    except requests.exceptions.RequestException as primary_err:
+        print(f"[-] Failed to download the file from the primary URL: {primary_err}")
+
+        # If the primary URL download fails, try the backup URL
+        try:
+            print(f"[+] Downloading file {input_file} from backup URL: {RESOURCE_BACKUP_URL}")
+            response = requests.get(RESOURCE_BACKUP_URL, stream=True)
+
+            # NoSuchBucket
+            if 'application/gzip' not in response.headers['Content-Type']:
+                raise ValueError("URL does not point to a file")
+
+            total_size = int(response.headers.get('content-length', 0))
+
+            # Download the file with tqdm for progress bar
+            with open(input_file, "wb") as file, tqdm(
+                desc="Downloading",
+                total=total_size,
+                unit="B",
+                unit_scale=True,
+                unit_divisor=1024,
+            ) as bar:
+                for data in response.iter_content(chunk_size=1024):
+                    bar.update(len(data))
+                    file.write(data)
+
+            resource_available = True
+            print(f"[+] File downloaded to {input_file} (from backup URL)")
+        except (requests.exceptions.RequestException, ValueError) as backup_err:
+            print(f"[-] Failed to download the file from the backup URL: {backup_err}")
     except Exception as e:
-        print(f"[-] Failed to download the file. Error: {e}")
+        print(f"[-] Failed to download the file: {e}")
 else:
     print(f"[+] The file {input_file} already exists. Skipping download")
 
+if not resource_available:
+    print(f'[-] Resource {input_file} not available. Exiting.')
+    exit(1)
+
 if not os.path.exists(output_file):
     try:
-        print(f"[+] Extracting file", input_file)
+        print(f'[+] Extracting file {input_file} to {output_file}')
         with gzip.open(input_file, 'rb') as f_in, open(output_file, 'wb') as f_out:
             shutil.copyfileobj(f_in, f_out)
         print(f"[+] File '{input_file}' has been successfully extracted to '{output_file}'.")
