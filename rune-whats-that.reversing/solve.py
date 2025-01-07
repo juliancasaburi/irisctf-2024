@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 RESOURCE_URL = "https://cdn.2024.irisc.tf/whats-a-rune.tar.gz"
 
-RESOURCE1_PATH = os.path.join(".", "recurso", "whats-a-rune.tar.gz")
+RESOURCE1_PATH = os.path.join(".", "resource", "whats-a-rune.tar.gz")
 SOLVE_FILES_PATH = os.path.join(".", "solve")
 FILE_PATH = os.path.join(SOLVE_FILES_PATH, "whats-a-rune", "the")
 FLAG_FILE_PATH = os.path.join(SOLVE_FILES_PATH, "flag.txt")
@@ -26,7 +26,7 @@ if not os.path.exists(RESOURCE1_PATH):
     resource_available = False
     # If the file doesn't exist, download it
     try:
-        # Create the 'recurso' directory if it doesn't exist
+        # Create the 'resource' directory if it doesn't exist
         os.makedirs(os.path.dirname(RESOURCE1_PATH), exist_ok=True)
 
         # Download the file

@@ -11,9 +11,9 @@ Note that the flag is not case sensitive.
 ### Resource
 [wheres-skat.tar.gz](https://cdn.2024.irisc.tf/wheres-skat.tar.gz)
 
-## Manual Solve
+## Solve manual
 
-Extract the wheres-skat.tar.gz file:
+Extraemos el archivo whats-a-rune.tar.gz:
 
 ```bash
 7z x ./resource/wheres-skat.tar.gz -o./resource/
@@ -27,55 +27,56 @@ Extract the wheres-skat.tar.gz file:
 7z x ./resource/wheres-skat/wheres-skat.zip -o./resource/
 ```
 
-Open /resource/wheres-skat.pcap in Wireshark:
+Abrimos /resource/wheres-skat.pcap en Wireshark:
 
 ![wireshark](./images/wheres-skat-wireshark-bssid-1.png)
 
-We can see WiFi SSIDs in the capture. We notice the BSSID of one particular network.
+Vemos ssids de redes wifi en la captura. Vemos el bssid de una de las redes en particular.
 
-We use [geowifi](https://github.com/GONZOsint/geowifi) to search coordinates by SSID.
+Utilizamos [geowifi](https://github.com/GONZOsint/geowifi) para buscar las coordenadas por ssid.
 
-We take the BSSID from the network shown in the previous screenshot: ba:46:9d:1b:28:5e and search it with geowifi.
+Tomamos el bssid de la red de la screenshot anterior: ba:46:9d:1b:28:5e y la buscamos con geowifi.
 
 ![wheres-skat-geowifi-ssid-1.png](./images/wheres-skat-geowifi-ssid-1.png)
 
-We get coordinates which we search in Google Maps:
+Obtenemos coordenadas que buscamos en google maps:
 
 ![wheres-skat-geowifi-maps-1.png](./images/wheres-skat-geowifi-maps-1.png)
 
-We perform the same procedure with the BSSID of "USW SOC Guest"
+Realizamos el mismo procedimiento con el bssid de "USW SOC Guest"
 
 ![wheres-skat-geowifi-ssid-2.png](./images/wheres-skat-geowifi-ssid-2.png)
 
 ![wheres-skat-geowifi-maps-2.png](./images/wheres-skat-geowifi-maps-2.png)
 
-We try the location "Los Angeles Union Station" with the format irisctf{los_angeles_union_station} and the flag is correct.
+Probamos la ubicación "Los Angeles Union Station" con el formato irisctf{los_angeles_union_station} y la flag es correcta.
+
 
 ### Flag
 Flag: `irisctf{los_angeles_union_station}`
 
 ![Solved](./images/wheres-skat-solved.png)
 
-## Solution using solve.py
-### Requirements
-The script requires multiple packages. Requirements can be installed with the following command:
+## Solve utilizando solve.py
+### Requerimientos
+El script requiere múltiples packages. La instalación de requerimientos se realiza con el siguiente comando:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Execution
-Run the following command:
+### Ejecución
+Se deberá ejecutar el siguiente comando:
 
 ```bash
 python solve.py
 ```
 
-It will show the latitudes and longitudes for some BSSIDs found in the capture and open Google Maps in the default browser at the found coordinates. The user will need to look at the map to get the name of the location.
+Mostrará en el output las latitudes y longitudes para algunas BSSID encontradas en la captura, y abrira en el navegador por defecto google maps en las coordenadas encontradas. El usuario deberá observar el mapa para obtener el nombre del lugar.
 
-> Note: the script will download the resource if not present in ./resource.  
-> Note: the script will download geowifi from its repository https://github.com/GONZOsint/geowifi.
+> Nota: el script descargará el recurso en caso de no existir en ./resource.  
+> Nota: el script descargará geowifi desde su repositorio https://github.com/GONZOsint/geowifi.
 
 ![Solved using python script 1](./images/wheres-skat-python-solve-1.png)
-![Solved using python script 2](./images/wheres-skat-python-solve-2.png)
-![Solved using python script 3](./images/wheres-skat-python-solve-3.png)
+![Solved using python script 1](./images/wheres-skat-python-solve-2.png)
+![Solved using python script 1](./images/wheres-skat-python-solve-3.png)

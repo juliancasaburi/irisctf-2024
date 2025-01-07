@@ -16,7 +16,7 @@ from tqdm import tqdm
 RESOURCE_PRIMARY_URL = "https://cdn.2024.irisc.tf/investigator-alligator.gz"
 RESOURCE_BACKUP_URL = "https://shawndxyz.sjc1.vultrobjects.com/ctf/2024.irisctf/investigator-alligator.gz"
 
-input_file = "./recurso/investigator-alligator.gz"
+input_file = "./resource/investigator-alligator.gz"
 output_dir = "./solve"
 output_file = os.path.join(output_dir, "investigator-alligator")
 extracted_path = os.path.join(output_dir, "extracted-files")
@@ -52,7 +52,7 @@ if not os.path.exists(input_file):
     resource_available = False
     # If the file doesn't exist, download it
     try:
-        # Create the 'recurso' directory if it doesn't exist
+        # Create the 'resource' directory if it doesn't exist
         os.makedirs(os.path.dirname(input_file), exist_ok=True)
         
         # Download the file from the primary URL

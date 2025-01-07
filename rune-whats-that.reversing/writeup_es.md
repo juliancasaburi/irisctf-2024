@@ -11,14 +11,14 @@ Rune? Like the ancient alphabet?
 Extraemos el archivo whats-a-rune.tar.gz:
 
 ```bash
-7z x ./recurso/whats-a-rune.tar.gz -o./recurso/
+7z x ./resource/whats-a-rune.tar.gz -o./resource/
 ```
 
 ```bash
-7z x ./recurso/whats-a-rune.tar -o./recurso/
+7z x ./resource/whats-a-rune.tar -o./resource/
 ```
 
-Abrimos /recurso/whats-a-rune/
+Abrimos /resource/whats-a-rune/
 
 Inspeccionamos el codigo de main.go:
 
@@ -98,6 +98,6 @@ python solve.py
 
 Mostrará en el output la flag y escribirá la misma en el archivo flag.txt dentro del directorio relativo ./solve
 
-> Nota: el script descargará el recurso en caso de no estar en ./recurso.
+> Nota: el script descargará el recurso en caso de no existir en ./resource.
 
 ![Solved using python script](./images/czech-where-python-solve.png)

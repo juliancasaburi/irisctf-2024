@@ -14,45 +14,45 @@ Download option 1 -
 Download Option 2 (Mirror) - 
 [Mirror investigator-alligator.gz](https://cdn.2024.irisc.tf/investigator-alligator.gz)
 
-**NOTA**: No se incluye el recurso en el repositorio debido a su tamaño.
+**NOTE**: Resource not included in repository due to its size.
 
 ```bash
-ls -lah ./recurso
+ls -lah ./resource
 total 31G
-drwxr-xr-x 2 jc jc 4,0K ene  7 12:51 .
-drwxr-xr-x 3 jc jc 4,0K ene  7 12:51 ..
--rw-r--r-- 1 jc jc  25G ene  7 11:02 investigator-alligator
--rw-r--r-- 1 jc jc 6,4G ene  7 11:05 investigator-alligator.gz
-``````
-
-## Solve manual
-
-### Primera parte de la flag
-
-Extraemos el archivo investigator-alligator.gz:
-
-```bash
-7z x ./recurso/investigator-alligator.gz -o./recurso/
+drwxr-xr-x 2 jc jc 4.0K Jan  7 12:51 .
+drwxr-xr-x 3 jc jc 4.0K Jan  7 12:51 ..
+-rw-r--r-- 1 jc jc  25G Jan  7 11:02 investigator-alligator
+-rw-r--r-- 1 jc jc 6.4G Jan  7 11:05 investigator-alligator.gz
 ```
 
-El archivo contiene datos formateados en el filesystem ext4:
+## Manual Solve
+
+### First part of the flag
+
+Extract the investigator-alligator.gz file:
+
+```bash
+7z x ./resource/investigator-alligator.gz -o./resource/
+```
+
+The file contains data formatted in ext4 filesystem:
 
 ```bash
 file investigator-alligator
 investigator-alligator: Linux rev 1.0 ext4 filesystem data, UUID=35fa8404-f9cc-45be-b6a5-22351ef2f486 (needs journal recovery) (extents) (64bit) (large files) (huge files)
 ```
 
-Montamos el filesystem
+Mount the filesystem:
 
 ```bash
-sudo mkdir /mnt/investigator-alligator && sudo mount ./recurso/investigator-alligator /mnt/investigator-alligator
+sudo mkdir /mnt/investigator-alligator && sudo mount ./resource/investigator-alligator /mnt/investigator-alligator
 ```
 
-- En root/LiME/src/ encontramos sample.mem, el dump de memoria mencionado en la descripción del challenge.
+- In root/LiME/src/ we find sample.mem, the memory dump mentioned in the challenge description.
 
-- En root/capture encontramos network, la captura de tráfico de red mencionada en la descripción del challenge.
+- In root/capture we find network, the network traffic capture mentioned in the challenge description.
 
-En /home/stephen se encuentra el archivo rswenc.py con el contenido:
+In /home/stephen we find the file rswenc.py with the content:
 
 ```py
 #!/usr/bin/env python3
@@ -77,16 +77,16 @@ with open(f_of, "wb") as f:
 	f.write(encrypted)
 ```
 
-Este script utiliza una operación XOR para cifrar un archivo de entrada y guardar el resultado en un archivo de salida.
+This script uses an XOR operation to encrypt an input file and save the result to an output file.
 
-`s.connect(("149.28.14.135", 9281))`: Establece una conexión con el servidor en la dirección IP "149.28.14.135" y el puerto 9281. Luego recibe una semilla del servidor.
+`s.connect(("149.28.14.135", 9281))`: Establishes a connection with the server at IP address "149.28.14.135" and port 9281. Then receives a seed from the server.
 
-`random.seed(seed)`: Inicializa el generador de números pseudoaleatorios con la semilla recibida.
+`random.seed(seed)`: Initializes the pseudorandom number generator with the received seed.
 
-`for i in range(len(data)): encrypted.append(data[i] ^ stream[i])`: Realiza la operación XOR byte a byte entre el contenido del archivo de entrada y la secuencia de bytes aleatorios (stream), y guarda el resultado en el objeto bytearray.
+`for i in range(len(data)): encrypted.append(data[i] ^ stream[i])`: Performs a byte-by-byte XOR operation between the input file content and the random byte sequence (stream), and stores the result in the bytearray object.
 
-Siendo una operación XOR, conociendo el valor recibido en seed, se podrá restaurar el archivo de entrada a su estado original.
-Para conocer el valor seed, lo buscaremos en la captura.
+Being an XOR operation, knowing the seed value received, we can restore the input file to its original state.
+To find the seed value, we'll look for it in the capture.
 
 ```bash
 tshark -r network -Y "tcp.port == 9281" -T fields -e data | xxd -r -p
@@ -94,12 +94,12 @@ tshark -r network -Y "tcp.port == 9281" -T fields -e data | xxd -r -p
 
 ![seed](./images/investigator-alligator-seed.png)
 
-Creamos un script rwsdec.py con el mismo contenido que rwsenc.py, eliminando la conexión por sockets y  cambiando la linea `seed =` por `seed = "eng0jieh7ahga7eidae6taebohhaicaeraef5ahng8ohb2Tho3ahz7ojooXeixoh0thoolung7eingietai8hiechar6ahchohn6uwah2Keid5phoil7Oovool3Quai"`
+We create a rwsdec.py script with the same content as rwsenc.py, removing the socket connection and changing the `seed =` line to `seed = "eng0jieh7ahga7eidae6taebohhaicaeraef5ahng8ohb2Tho3ahz7ojooXeixoh0thoolung7eingietai8hiechar6ahchohn6uwah2Keid5phoil7Oovool3Quai"`
 
-Quedando de la siguiente forma:
+The script becomes:
 `rwsdec.py`:
 
-```bash
+```py
 #!/usr/bin/env python3
 import random
 import sys
@@ -120,7 +120,7 @@ with open(f_of, "wb") as f:
 	f.write(decrypted)
 ```
 
-Lo colocamos en /home/stephen y ejecutamos `python rwsdec.py encrypted.img decrypted.img`
+We place it in /home/stephen and run `python rwsdec.py encrypted.img decrypted.img`
 
 ```bash
 sudo mkdir /mnt/investigator-alligator-decrypted && sudo mount ./decrypted.img /mnt/investigator-alligator-decrypted 
@@ -128,19 +128,19 @@ sudo mkdir /mnt/investigator-alligator-decrypted && sudo mount ./decrypted.img /
 
 ![ls decrypted](./images/investigator-alligator-ls-decrypted.png)
 
-Abrimos la imagen /mnt/investigator-alligator-decrypted/data/super_duper_important_info.png y encontramos la primera parte de la flag: `irisctf{y0ure_a_r3al_m4ster_det3`
+We open the image /mnt/investigator-alligator-decrypted/data/super_duper_important_info.png and find the first part of the flag: `irisctf{y0ure_a_r3al_m4ster_det3`
 
-### Segunda parte de la flag
+### Second part of the flag
 
-En la descripción del challenge dice que el usuario escribió algo al ser hackeado. Por lo tanto buscaremos en el dump de memoria generado por [LiME ~ Linux Memory Extractor](https://github.com/504ensicsLabs/LiME).
+The challenge description mentions that the user typed something after being hacked. Therefore, we'll search the memory dump generated by [LiME ~ Linux Memory Extractor](https://github.com/504ensicsLabs/LiME).
 
-Abrimos el archivo /root/LiMe/src/sample.mem en un editor de texto y en la línea 4062972 encontramos:
+We open the file /root/LiMe/src/sample.mem in a text editor and on line 4062972 we find:
 
 ```bash
 echo "I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDx1bmlzdGQuaD4KCmludCBtYWluKCkKewoJY2hhciBidWZmZXJbMTAyNF0gPSB7MH07CgoJcHV0cygiWU9VJ1ZFIEJFRU4gUFdORUQhIik7CglwdXRzKCJXSEFUIERPIFlPVSBTQVkgSU4gUkVTUE9OU0U/Iik7CglmZ2V0cyhidWZmZXIsIDEwMjQsIHN0ZGluKTsKCglwdXRzKCJNRUFOV0hJTEUsIFRIRSBQV05FUiBHT0VTIHp6ei4uLiIpOwoJc2xlZXAoOTk5OSk7Cn0K" | base64 -d > taunt.c
 ```
 
-El código fuente del programa taunt.c, luego de usar base64 -d es:
+The source code for taunt.c, after using base64 -d is:
 
 ```c
 #include <stdio.h>
@@ -159,7 +159,7 @@ int main()
 }
 ```
 
-Ya que el programa muestra *"WHAT DO YOU SAY IN RESPONSE?"* buscamos este texto, y en la línea 867206 encontramos que tal como lo indicaba el challenge, el usuario escribió:
+Since the program shows *"WHAT DO YOU SAY IN RESPONSE?"* we search for this text, and on line 867206 we find that as indicated in the challenge, the user wrote:
 
 ```
 YOU'VE BEEN PWNED!
@@ -168,38 +168,37 @@ ctive_ty_f0r_s4v1ng_0ur_d4ta}
 MEANWHILE, THE PWNER GOES zzz...
 ```
 
-Se encontró la segunda parte de la flag: `ctive_ty_f0r_s4v1ng_0ur_d4ta}`. Por lo tanto ya conseguimos la flag completa!
-
+We found the second part of the flag: `ctive_ty_f0r_s4v1ng_0ur_d4ta}`. Therefore, we have the complete flag!
 
 ### Flag
 Flag: `irisctf{y0ure_a_r3al_m4ster_det3ctive_ty_f0r_s4v1ng_0ur_d4ta}`
 
 ![Solved](./images/investigator-alligator-solved.png)
 
-## Solve utilizando solve.py
-### Requerimientos
-El script requiere múltiples packages. La instalación de requerimientos se realiza con el siguiente comando:
+## Solution using solve.py
+### Requirements
+The script requires multiple packages. Requirements can be installed with the following command:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Además requiere tener instalado [7z](https://linux.die.net/man/1/7z)
+It also requires having [7z](https://linux.die.net/man/1/7z) installed
 
 ```py
 # Run the 7z command to extract files
 command = ["7z", "e", "-aos", output_file, capture_to_extract, f"-o{extracted_path}"]
 ```
 
-### Ejecución
-Se deberá ejecutar el siguiente comando:
+### Execution
+Run the following command:
 
 ```bash
 python solve.py
 ```
 
-Mostrará en el output la segunda parte de la flag y el path de la imagen que deberá ser visualizada para obtener la primera parte de la flag.
+It will show the second part of the flag in the output and the path to the image that needs to be viewed to obtain the first part of the flag.
 
-> Nota: el script descargará el recurso en caso de no estar en ./recurso.
+> Note: the script will download the resource if not present in ./resource.
 
 ![Solved using python script](./images/investigator-alligator-python-solve.png)
