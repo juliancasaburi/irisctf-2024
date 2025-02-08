@@ -9,8 +9,8 @@ import pexpect
 import os
 
 # Constants
-RECURSO_DIR = './recurso'
-PRIVATE_KEY_PATH = os.path.join(RECURSO_DIR, 'id_rsa')
+RESOURCE_DIR = './resource'
+PRIVATE_KEY_PATH = os.path.join(RESOURCE_DIR, 'id_rsa')
 REPO_URL = 'git@github.com:IrisSec/skats-interesting-things.git'
 PASSPHRASE = "password"
 SOLVE_DIR = "./solve"

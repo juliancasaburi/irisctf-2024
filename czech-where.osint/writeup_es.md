@@ -6,36 +6,36 @@ Iris visited this cool shop a while back, but forgot where it was! What street i
 ### Resource
 [Download czech-where.tar.gz](https://cdn.2024.irisc.tf/czech-where.tar.gz)
 
-## Manual solve
+## Solve manual
 
-Let's extract the czech-where.tar.gz file:
+Extraemos el archivo czech-where.tar.gz:
 
 ```bash
-7z x ./resource/czech-where.tar.gz -o./resource/
+7z x ./resource/czech-where.tar.gz -o ./resource/
 ```
 
 ```bash
-7z x ./resource/czech-where.tar -o./resource/
+7z x ./resource/czech-where.tar -o ./resource/
 ```
 
-Open image.png in ./resource/czech-where/
+Abrimos image.png en ./resource/czech-where/
 
 ![czech-where-image.png](./images/czech-where-image.png)
 
-We can see that the shop has "Czech wooden products" written on it. We search for it on Google Maps and the first result is:
+Vemos que la tienda tiene escrito "Czech wooden products". La buscamos en google maps y el primer resultado es:
 
 ![czech-where-maps-1.png](./images/czech-where-maps-1.png)
 
-The shop in the result looks very similar to the image from the resource.
+La tienda del resultado se ve muy similar a la imagen del recurso.
 
 ![czech-where-maps-2.png](./images/czech-where-maps-2.png)
 
-Therefore, the location is Zlatá ulička u Daliborky, 119 00 Praha 1-Hradčany, Czechia and the street is Zlatá ulička u Daliborky.
+Por lo tanto la ubicación es Zlatá ulička u Daliborky, 119 00 Praha 1-Hradčany, Czechia y la calle es Zlatá ulička u Daliborky.
 
-Given that the challenge indicates the flag format:
+Dado que el challenge indica el formato de la flag:
 > flag is all lowercase and _ for spaces. Please remove all accent marks if there are any. Wrap your answer in irisctf{}.
 
-We can fix the format with the following Python script:
+Podemos arreglar el formato con el siguiente script en python:
 
 ```py
 import unicodedata
@@ -58,16 +58,16 @@ Flag: `irisctf{zlata_ulicka_u_daliborky}`
 
 ![Solved](./images/czech-where-solved.png)
 
-## Solution using solve.py
+## Solve utilizando solve.py
 
-**NOTE**: since the script uses web scraping, it might stop working correctly if Google Maps gets updated. An alternative would be to create a script that uses an API Key.
+**NOTA**: dado que el script utiliza web scraping, es posible que deje de funcionar correctamente ante una actualización de Google Maps. Una alternativa es hacer un script que utilice una API Key.
 
-Execute the following command:
+Se deberá ejecutar el siguiente comando:
 
 ```bash
 python solve.py
 ```
 
-It will show the flag in the output and write it to the flag.txt file in the relative ./solve directory
+Mostrará en el output la flag y escribirá la misma en el archivo flag.txt dentro del directorio relativo ./solve
 
 ![Solved using python script](./images/czech-where-python-solve.png)

@@ -53,9 +53,9 @@ El repositorio https://github.com/irissec/skats-interesting-things es privado, p
 En /skats-sd-card/home/skat/.ssh se encuentra el archivo id_rsa, por lo tanto se probará clonar el repositorio usando la clave privada encontrada.
 
 ```bash
-GIT_SSH_COMMAND='ssh -i "./recurso/id_rsa" -o IdentitiesOnly=yes' git clone git@github.com:IrisSec/skats-interesting-things.git ./recurso/skats-interesting-things
-Cloning into './recurso/skats-interesting-things'...
-Enter passphrase for key './recurso/id_rsa':
+GIT_SSH_COMMAND='ssh -i "./resource/id_rsa" -o IdentitiesOnly=yes' git clone git@github.com:IrisSec/skats-interesting-things.git ./resource/skats-interesting-things
+Cloning into './resource/skats-interesting-things'...
+Enter passphrase for key './resource/id_rsa':
 ```
 
 El problema es que se necesita la passphrase, la cual es desconocida.
@@ -69,7 +69,7 @@ sudo wget --no-check-certificate -q "https://raw.githubusercontent.com/d4t4s3c/R
 Luego ejecutamos la tool, utilizando la wordlist rockyou:
 
 ```bash
-RSAcrack -k ./recurso/id_rsa -w /usr/share/wordlists/rockyou.txt
+RSAcrack -k ./resource/id_rsa -w /usr/share/wordlists/rockyou.txt
 ```
 
 ![RSA Crack](./images/skats-sd-card-rsacrack.png)
@@ -79,7 +79,7 @@ Se obtuvo la password: `password`
 Ahora sí, se prueba clonar el repositorio. Ingresamos la passphrase `password`
 
 ```bash
-GIT_SSH_COMMAND='ssh -i "./recurso/id_rsa" -o IdentitiesOnly=yes' git clone git@github.com:IrisSec/skats-interesting-things.git ./recurso/skats-interesting-things
+GIT_SSH_COMMAND='ssh -i "./resource/id_rsa" -o IdentitiesOnly=yes' git clone git@github.com:IrisSec/skats-interesting-things.git ./resource/skats-interesting-things
 ```
 
 ![Cloned repo](./images/skats-sd-card-cloned-repo.png)

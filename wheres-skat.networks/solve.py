@@ -16,7 +16,7 @@ import json
 
 RESOURCE_URL = "https://cdn.2024.irisc.tf/wheres-skat.tar.gz"
 
-RESOURCE1_PATH = os.path.join(".", "recurso", "wheres-skat.tar.gz")
+RESOURCE1_PATH = os.path.join(".", "resource", "wheres-skat.tar.gz")
 SOLVE_FILES_PATH = os.path.join(".", "solve")
 RESOURCE2_PATH = os.path.join(SOLVE_FILES_PATH, "wheres-skat", "wheres-skat.zip")
 GEOWIFI_PATH = os.path.join(SOLVE_FILES_PATH, "geowifi-main")
@@ -119,7 +119,7 @@ if __name__ == "__main__":
         resource_available = False
         # If the file doesn't exist, download it
         try:
-            # Create the 'recurso' directory if it doesn't exist
+            # Create the 'resource' directory if it doesn't exist
             os.makedirs(os.path.dirname(RESOURCE1_PATH), exist_ok=True)
             
             # Download the file
